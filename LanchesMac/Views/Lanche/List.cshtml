@@ -1,5 +1,22 @@
 ﻿@model LancheListViewModel
 
+
+<form asp-controller="Lanche" asp-action="List" method="post">
+
+    <input type="text" name="nomeCategoria" class="form-control form-control-lg rounded-pill shadow-sm" 
+    placeholder="Pesquisar lanche..." style="max-width: 350px;" />
+
+    <br />
+
+    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">
+        Pesquisar
+    </button>
+
+    <br />
+    <br />
+
+</form>
+
 <div>
     <h2>@Model.CategoriaAtual</h2>
     <br />

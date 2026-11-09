@@ -1,26 +1,62 @@
-﻿using LanchesMac.Repositories.Interfaces;
+﻿using LanchesMac.Models;
+using LanchesMac.Repositories.Interfaces;
 using LanchesMac.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace LanchesMac.Controllers
+namespace LanchesMac.Controllers;
+
+public class LancheController : Controller
 {
-    public class LancheController : Controller
+    private readonly ILancheRepository _lancheRepository;
+
+    public LancheController(ILancheRepository lancheRepository)
     {
-        private readonly ILancheRepository _lancheRepository;
+        _lancheRepository = lancheRepository;
+    }
 
-        public LancheController(ILancheRepository lancheRepository)
+    public IActionResult List(string nomeCategoria)
+    {
+        IEnumerable<Lanche> lanches;
+        string categoriaAtual = string.Empty;
+
+        var naoExisteLanche = !_lancheRepository.Lanches
+            .Any(l => l.Categoria.CategoriaNome
+            .Equals(nomeCategoria, StringComparison.OrdinalIgnoreCase));
+
+        if (string.IsNullOrEmpty(nomeCategoria) || naoExisteLanche)
         {
-            _lancheRepository = lancheRepository;
+            lanches = _lancheRepository.Lanches.OrderBy(l => l.LancheId);
+            categoriaAtual = "Todos os lanches";
+        }
+        else
+        {
+            if (string.Equals("Normal", nomeCategoria, StringComparison.OrdinalIgnoreCase))
+            {
+                lanches = _lancheRepository.Lanches
+                    .Where(l => l.Categoria.CategoriaNome.Equals("Normal"))
+                    .OrderBy(l => l.Nome);
+
+                categoriaAtual = "Normal";
+            }
+            else
+            {
+
+                lanches = _lancheRepository.Lanches
+                    .Where(l => l.Categoria.CategoriaNome.Equals("Natural"))
+                    .OrderBy(l => l.Nome);
+
+                categoriaAtual = "Natural";
+            }
         }
 
-        public IActionResult List()
+        var lanchesListViewModel = new LancheListViewModel
         {
-            var lancheListViewModel = new LancheListViewModel();
-            lancheListViewModel.Lanche = _lancheRepository.Lanches;
-            lancheListViewModel.CategoriaAtual = "Categoria Atual";
+            Lanche = lanches,
+            CategoriaAtual = categoriaAtual
+        };
 
-            return View(lancheListViewModel);
-        }
+        return View(lanchesListViewModel);
+
     }
 }

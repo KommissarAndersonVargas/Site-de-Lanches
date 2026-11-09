@@ -2,14 +2,9 @@
 
 namespace LanchesMac.Controllers
 {
-    public class TesteController : Controller
+    public class ContatoController : Controller
     {
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Demo()
         {
             return View();
         }
