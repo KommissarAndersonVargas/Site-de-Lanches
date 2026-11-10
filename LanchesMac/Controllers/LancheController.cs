@@ -20,34 +20,16 @@ public class LancheController : Controller
         IEnumerable<Lanche> lanches;
         string categoriaAtual = string.Empty;
 
-        var naoExisteLanche = !_lancheRepository.Lanches
-            .Any(l => l.Categoria.CategoriaNome
-            .Equals(nomeCategoria, StringComparison.OrdinalIgnoreCase));
-
-        if (string.IsNullOrEmpty(nomeCategoria) || naoExisteLanche)
+        if (string.IsNullOrEmpty(nomeCategoria))
         {
             lanches = _lancheRepository.Lanches.OrderBy(l => l.LancheId);
             categoriaAtual = "Todos os lanches";
         }
         else
         {
-            if (string.Equals("Normal", nomeCategoria, StringComparison.OrdinalIgnoreCase))
-            {
-                lanches = _lancheRepository.Lanches
-                    .Where(l => l.Categoria.CategoriaNome.Equals("Normal"))
-                    .OrderBy(l => l.Nome);
-
-                categoriaAtual = "Normal";
-            }
-            else
-            {
-
-                lanches = _lancheRepository.Lanches
-                    .Where(l => l.Categoria.CategoriaNome.Equals("Natural"))
-                    .OrderBy(l => l.Nome);
-
-                categoriaAtual = "Natural";
-            }
+            lanches = _lancheRepository.Lanches
+                      .Where(l=> l.Categoria.CategoriaNome.Equals(nomeCategoria, StringComparison.OrdinalIgnoreCase))
+                      .OrderBy(l => l.Nome);
         }
 
         var lanchesListViewModel = new LancheListViewModel
