@@ -28,7 +28,7 @@ public class LancheController : Controller
         else
         {
             lanches = _lancheRepository.Lanches
-                      .Where(l=> l.Categoria.CategoriaNome.Equals(nomeCategoria, StringComparison.OrdinalIgnoreCase))
+                      .Where(l => l.Categoria.CategoriaNome.Equals(nomeCategoria, StringComparison.OrdinalIgnoreCase))
                       .OrderBy(l => l.Nome);
         }
 
@@ -40,5 +40,12 @@ public class LancheController : Controller
 
         return View(lanchesListViewModel);
 
+    }
+
+    public IActionResult Details(int lancheId)
+    {
+        var lanche = _lancheRepository.Lanches.FirstOrDefault(l => l.LancheId == lancheId);
+
+        return View(lanche);
     }
 }
